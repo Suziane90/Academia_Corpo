@@ -1,0 +1,25 @@
+# Ignorar ambiente virtual
+venv/
+venv-academia/
+
+# Ignorar arquivos e pastas do sistema
+*.log
+*.tmp
+*.bak
+*.pub
+*.keystore
+*.avd
+.cache/
+.bash_history
+.gitconfig
+
+# Ignorar arquivos de IDEs e editores
+.vscode/
+.idea/
+
+# Ignorar banco de dados local (opcional, depende do projeto)
+*.sqlite3
+
+# Ignorar arquivos Python compilados
+__pycache__/
+*.py[cod]
