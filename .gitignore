@@ -12,6 +12,7 @@ venv-academia/
 .cache/
 .bash_history
 .gitconfig
+.history/
 
 # Ignorar arquivos de IDEs e editores
 .vscode/
