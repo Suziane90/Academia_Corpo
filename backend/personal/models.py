@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 class Personal(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='personal')
     descricao = models.TextField(null = True)
 
     
