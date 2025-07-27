@@ -1,22 +1,21 @@
-"""
-URL configuration for academia project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+from os import path
+from rest_framework.routers import DefaultRouter
+from personal.views import PersonalViewSet
+from aluno.views import AlunoViewSt
+from users.views import CustomUserViewSet
+from django.urls import path, include
 from django.contrib import admin
-from django.urls import path
+from exercicio.views import ExercicioViewSet
+from treino.views import TreinoViewSet
+
+router = DefaultRouter()
+router.register(r'usuarios', CustomUserViewSet, basename='customuser')
+router.register(r'personals', PersonalViewSet, basename='personal')
+router.register(r'alunos', AlunoViewSt, basename='aluno' )
+router.register(r'exercicio', ExercicioViewSet)
+router.register(r'treino', TreinoViewSet, basename='treino')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
 ]

@@ -14,7 +14,7 @@ __pycache__/
 .bash_history
 .gitconfig
 .history/
-
+.vscode
 # IDEs
 .vscode/
 .idea/
