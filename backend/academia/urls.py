@@ -7,6 +7,10 @@ from django.urls import path, include
 from django.contrib import admin
 from exercicio.views import ExercicioViewSet
 from treino.views import TreinoViewSet
+from django.conf.urls.static import static
+from django.conf import settings
+
+
 
 router = DefaultRouter()
 router.register(r'usuarios', CustomUserViewSet, basename='customuser')
@@ -26,4 +30,9 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include('users.urls')),
+
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

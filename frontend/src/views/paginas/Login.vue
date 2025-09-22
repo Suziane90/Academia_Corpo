@@ -35,7 +35,7 @@ const login = async () => {
     const refresh = response.data.refresh
 
     // 2. Salva tokens no localStorage
-    localStorage.setItem('access', access)
+    localStorage.setItem('token', access)
     localStorage.setItem('refresh', refresh)
 
     // 3. Busca dados do usuário para saber o tipo

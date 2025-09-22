@@ -1,6 +1,108 @@
+exercicoForm ta assim
+
+<script>
+export default {
+  props: {
+    exercicio: {
+      type: Object,
+      default: null
+    }
+  },
+  data() {
+    return {
+      form: {
+        nome_exercicio: '',
+        grupo_muscular: 'peito',
+        series: 3,
+        repeticoes: 10,
+        carga: 'padrao',
+        descanso: 60,
+        descricao: '',
+        imagem: null,
+        video: null,
+        personal: null
+      }
+    }
+  },
+  watch: {
+    exercicio: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) {
+          this.form = { ...newVal }
+        } else {
+          this.resetForm()
+        }
+      }
+    }
+  },
+  methods: {
+    resetForm() {
+      this.form = {
+        nome_exercicio: '',
+        grupo_muscular: 'peito',
+        series: 3,
+        repeticoes: 10,
+        carga: 'padrao',
+        descanso: 60,
+        descricao: '',
+        imagem: null,
+        video: null,
+        personal: null
+      }
+    },
+    handleFileChange(event, field) {
+      const file = event.target.files[0]
+      this.form[field] = file
+    },
+    async submitForm() {
+      try {
+        const formData = new FormData()
+
+        formData.append('nome_exercicio', this.form.nome_exercicio)
+        formData.append('grupo_muscular', this.form.grupo_muscular)
+        formData.append('series', this.form.series)
+        formData.append('repeticoes', this.form.repeticoes)
+        formData.append('carga', this.form.carga)
+        formData.append('descanso', this.form.descanso)
+        formData.append('descricao', this.form.descricao)
+        formData.append('personal', this.form.personal)
+
+        if (this.form.imagem instanceof File) formData.append('imagem', this.form.imagem)
+        if (this.form.video instanceof File) formData.append('video', this.form.video)
+
+        const token = localStorage.getItem('token')
+        const url = this.exercicio ? `/api/exercicio/${this.exercicio.id}/` : '/api/exercicio/'
+        const method = this.exercicio ? 'PUT' : 'POST'
+
+        const response = await fetch(url, {
+          method,
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          alert('Erro: ' + JSON.stringify(errorData))
+          return
+        }
+
+        alert('Exercício salvo com sucesso!')
+        this.$emit('salvo')
+      } catch (error) {
+        console.error('Erro ao salvar exercício:', error)
+        alert('Erro ao salvar exercício.')
+      }
+    },
+    cancelar() {
+      this.$emit('cancelar')
+    }
+  }
+}
+</script>
 <template>
   <div>
-    <h1>Cadastrar Exercício</h1>
+    <h1>{{ exercicio ? 'Editar Exercício' : 'Cadastrar Exercício' }}</h1>
     <form @submit.prevent="submitForm">
       <div>
         <label for="nome_exercicio">Nome exercício</label>
@@ -84,91 +186,8 @@
       </div>
 
       <button type="submit">Salvar</button>
+      <button type="button" @click="cancelar">Cancelar</button>
     </form>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      form: {
-        nome_exercicio: '',
-        grupo_muscular: 'peito',
-        series: 3,
-        repeticoes: 10,
-        carga: 'padrao',
-        descanso: 60,
-        descricao: '',
-        imagem: null,
-        video: null,
-        personal: null  // IMPORTANTE: Defina o personal que está criando o exercício
-      }
-    }
-  },
-  methods: {
-    handleFileChange(event, field) {
-      const file = event.target.files[0]
-      this.form[field] = file
-    },
-
-    async submitForm() {
-      try {
-        const formData = new FormData()
-
-        // Adiciona campos texto
-        formData.append('nome_exercicio', this.form.nome_exercicio)
-        formData.append('grupo_muscular', this.form.grupo_muscular)
-        formData.append('series', this.form.series)
-        formData.append('repeticoes', this.form.repeticoes)
-        formData.append('carga', this.form.carga)
-        formData.append('descanso', this.form.descanso)
-        formData.append('descricao', this.form.descricao)
-
-        // Personal tem que estar preenchido (exemplo fixo, ou obtido do auth)
-        formData.append('personal', this.form.personal)
-
-        // Arquivos (imagem e vídeo)
-        if (this.form.imagem) {
-          formData.append('imagem', this.form.imagem)
-        }
-        if (this.form.video) {
-          formData.append('video', this.form.video)
-        }
-
-        // POST usando fetch (ou axios, se preferir)
-        const response = await fetch('/api/exercicio/', {
-          method: 'POST',
-          body: formData,
-        })
-
-        if (!response.ok) {
-          const errorData = await response.json()
-          console.error('Erro:', errorData)
-          alert('Erro ao salvar exercício: ' + JSON.stringify(errorData))
-          return
-        }
-
-        alert('Exercício salvo com sucesso!')
-        // Limpa formulário
-        this.form = {
-          nome_exercicio: '',
-          grupo_muscular: 'peito',
-          series: 3,
-          repeticoes: 10,
-          carga: 'padrao',
-          descanso: 60,
-          descricao: '',
-          imagem: null,
-          video: null,
-          personal: null
-        }
-
-      } catch (error) {
-        console.error('Erro ao salvar exercício:', error)
-        alert('Erro ao salvar exercício.')
-      }
-    }
-  }
-}
-</script>
